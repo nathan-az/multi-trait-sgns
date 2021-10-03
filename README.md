@@ -2,11 +2,11 @@
 
 ### Introduction
 
-This repo includes code for a neural network for learning embeddings of items which include additional "side information". Paritcularly useful for tackling cold start problems in situations with increasing an increasing item space (e.g. retail, video recommendation, etc). The code was adapted from the blueprint outlined in [1]. 
+This repo includes code for a neural network for learning embeddings of items which include additional "side information". Paritcularly useful for tackling cold start problems in situations with increasing an increasing item space (e.g. retail, video recommendation, etc). The code was adapted from the blueprint outlined in [[1]](#source-1). 
 
 ## Design choices
 
-The paper ([1]) is not especially specific about the neural network structure. As such, the following design choices were made:
+The [paper](#source-1) is not especially specific about the neural network structure. As such, the following design choices were made:
 
 1. Separate embeddings for target and context items
 2. Separate vector allowed for defining weighted average embeddings between target and context
@@ -22,4 +22,4 @@ Choice (1) was made to remain consistent with most implementations of Word2Vec w
 
 ### Sources
 
-[[1] Billion-scale Commodity Embedding for E-commerce Recommendation in Alibaba](https://arxiv.org/abs/1803.02349)
+<a name="source-1">[[1] Billion-scale Commodity Embedding for E-commerce Recommendation in Alibaba](https://arxiv.org/abs/1803.02349)</a>
