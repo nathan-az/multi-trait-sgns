@@ -2,7 +2,7 @@
 
 ### Introduction
 
-This repo includes code for a neural network for learning embeddings of items which include additional "side information". Paritcularly useful for tackling cold start problems in situations with increasing an increasing item space (e.g. retail, video recommendation, etc). The code was adapted from the blueprint outlined in [[1]](#source-1). 
+This repo includes code for a neural network for learning embeddings of items which include additional "side information". Paritcularly useful for tackling cold start problems in situations with increasing an increasing item space such as recommendation (e.g. retail products, video recommendation, etc). The code was adapted from the blueprint outlined in [[1]](#source-1). 
 
 ## Design choices
 
