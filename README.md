@@ -6,7 +6,7 @@ This repo includes code for a neural network for learning embeddings of items wh
 
 ## Design choices
 
-The [paper](#source-1) is not especially specific about the neural network structure. As such, the following design choices were made:
+The [main paper [1]](#source-1) is not especially specific about the neural network structure. As such, the following design choices were made:
 
 1. Separate embeddings for target and context items
 2. Separate vector allowed for defining weighted average embeddings between target and context
