@@ -106,7 +106,7 @@ class MultiEmbeddingSGNS(nn.Module):
     def forward(self, x):
         # x.shape (bs, 2, num_embeddings) should contain indices
         target_indices = x[:, 0, :]
-        context_indices = x[:, 0, :]
+        context_indices = x[:, 1, :]
 
         target_embedding = self.forward_target(target_indices)
         context_embedding = self.forward_context(context_indices)
