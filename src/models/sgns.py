@@ -1,14 +1,14 @@
-from typing import List
+from typing import List, Dict
 
 import torch
 from torch import nn
 
 
 class MultiEmbeddingSGNS(nn.Module):
-    def __init__(self, vocab_size: int, embedding_dim: int, side_info_names: List[str]):
+    def __init__(self, vocab_size: int, embedding_dim: int, side_info_specs: Dict[str, int]):
         super().__init__()
 
-        self.num_embeddings = 1 + len(side_info_names)
+        self.num_embeddings = 1 + len(side_info_specs)
         self.embedding_dim = embedding_dim
 
         self.target_embeddings = nn.ModuleDict(
@@ -20,11 +20,11 @@ class MultiEmbeddingSGNS(nn.Module):
                 ),
                 **{
                     name: nn.Embedding(
-                        num_embeddings=vocab_size,
+                        num_embeddings=size,
                         embedding_dim=embedding_dim,
                         padding_idx=0,
                     )
-                    for name in side_info_names
+                    for name, size in side_info_specs.items()
                 },
             }
         )
@@ -37,11 +37,11 @@ class MultiEmbeddingSGNS(nn.Module):
                 ),
                 **{
                     name: nn.Embedding(
-                        num_embeddings=vocab_size,
+                        num_embeddings=size,
                         embedding_dim=embedding_dim,
                         padding_idx=0,
                     )
-                    for name in side_info_names
+                    for name, size in side_info_specs.items()
                 },
             }
         )
@@ -85,7 +85,7 @@ class MultiEmbeddingSGNS(nn.Module):
     def forward_target(self, x):
         """For extracting the weighted target embedding"""
         embedding_batch = self._get_embedding_batch(
-            x, embeddings=[embedder for embedder in self.target_embeddings.values()]
+            x, embeddings=[embedding for embedding in self.target_embeddings.values()]
         )
         out = self._weight_embeddings(embedding_batch, self.target_embedding_weights)
         return out
@@ -93,7 +93,7 @@ class MultiEmbeddingSGNS(nn.Module):
     def forward_context(self, x):
         """For extracting the weighted target embedding"""
         embedding_batch = self._get_embedding_batch(
-            x, embeddings=[embedder for embedder in self.context_embeddings.values()]
+            x, embeddings=[embedding for embedding in self.context_embeddings.values()]
         )
         out = self._weight_embeddings(embedding_batch, self.context_embedding_weights)
         return out
