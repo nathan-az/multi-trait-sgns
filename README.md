@@ -16,9 +16,9 @@ Choice (1) was made to remain consistent with most implementations of Word2Vec w
 
 ## To-Do
 * Automate cpu/gpu flexibility
-* Basic unit tests for individual operations
-* End-to-end test for "forward"
-* Functional test to ensure gradients are correctly passing back to embeddings
+* ~~Basic unit tests for individual operations
+* ~~End-to-end test for "forward" (i.e. forward runs without breaking)
+* ~~Functional test to ensure gradients are correctly passing back to embeddings
 
 ## Sources
 
