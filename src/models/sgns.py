@@ -18,13 +18,11 @@ class MultiEmbeddingSGNS(nn.Module):
                 "base": nn.Embedding(
                     num_embeddings=vocab_size,
                     embedding_dim=embedding_dim,
-                    padding_idx=0,
                 ),
                 **{
                     name: nn.Embedding(
                         num_embeddings=size,
                         embedding_dim=embedding_dim,
-                        padding_idx=0,
                     )
                     for name, size in side_info_specs.items()
                 },
@@ -35,13 +33,11 @@ class MultiEmbeddingSGNS(nn.Module):
                 "base": nn.Embedding(
                     num_embeddings=vocab_size,
                     embedding_dim=embedding_dim,
-                    padding_idx=0,
                 ),
                 **{
                     name: nn.Embedding(
                         num_embeddings=size,
                         embedding_dim=embedding_dim,
-                        padding_idx=0,
                     )
                     for name, size in side_info_specs.items()
                 },
@@ -87,7 +83,7 @@ class MultiEmbeddingSGNS(nn.Module):
     def _weight_embeddings(self, embedding_batch, embedding_weights):
         normalised_weights = self.weight_softmax(embedding_weights)
         out = torch.einsum(
-            "bnd,nl->bdl", embedding_batch, normalised_weights
+            "bnd,nl->bld", embedding_batch, normalised_weights
         )  # bs, batch_size, 1
         return out
 
@@ -116,7 +112,7 @@ class MultiEmbeddingSGNS(nn.Module):
         context_embedding = self.forward_context(context_indices)
 
         logits = torch.matmul(target_embedding, context_embedding.transpose(1, 2))
-        out = self.sigmoid(logits)
+        out = self.sigmoid(logits).squeeze()  # (bs, 1) - can fully squeeze if needed
         return out
 
     def extract_mean_embedding(self, x):
