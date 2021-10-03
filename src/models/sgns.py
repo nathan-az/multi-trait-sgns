@@ -5,7 +5,9 @@ from torch import nn
 
 
 class MultiEmbeddingSGNS(nn.Module):
-    def __init__(self, vocab_size: int, embedding_dim: int, side_info_specs: Dict[str, int]):
+    def __init__(
+        self, vocab_size: int, embedding_dim: int, side_info_specs: Dict[str, int]
+    ):
         super().__init__()
 
         self.num_embeddings = 1 + len(side_info_specs)
@@ -58,16 +60,23 @@ class MultiEmbeddingSGNS(nn.Module):
         self.weight_softmax = nn.Softmax(dim=0)
         self.sigmoid = nn.Sigmoid()
 
-    def _get_embedding_batch(self, x, embeddings: List[nn.Module]):
-        """For extracting the weighted target embedding"""
+    def indices_to_embedding_vectors(self, x, embeddings: List[nn.Module]):
+        """
+        Returns a tensor of vectors for each batch, for each embedding
+
+        :param x: Tensor of indices with shape (batch_size, num_embeddings)
+        :param embeddings: List of nn.Embedding modules, where len(embeddings) == x.shape[1]
+        :return:
+        Tensor of shape (bs, num_embeddings, embedding_dim) with indices turned to their corresponding vectors.
+        """
         # x should be a tensor of shape (batch_size, self.num_embeddings)
         bs, num_embeddings = x.shape
 
         out = torch.stack(
             [
-                embedder(x[b, i])
+                embedding(x[b, i])
                 for b in range(bs)
-                for i, embedder in enumerate(embeddings)
+                for i, embedding in enumerate(embeddings)
             ]
         )  # bs * num_embeddings, dim
         out = out.reshape(
@@ -83,16 +92,16 @@ class MultiEmbeddingSGNS(nn.Module):
         return out
 
     def forward_target(self, x):
-        """For extracting the weighted target embedding"""
-        embedding_batch = self._get_embedding_batch(
+        """For extracting the weighted target embedding, x specifies indices for each type of info"""
+        embedding_batch = self.indices_to_embedding_vectors(
             x, embeddings=[embedding for embedding in self.target_embeddings.values()]
         )
         out = self._weight_embeddings(embedding_batch, self.target_embedding_weights)
         return out
 
     def forward_context(self, x):
-        """For extracting the weighted target embedding"""
-        embedding_batch = self._get_embedding_batch(
+        """For extracting the weighted context embedding, x specifies indices for each type of info"""
+        embedding_batch = self.indices_to_embedding_vectors(
             x, embeddings=[embedding for embedding in self.context_embeddings.values()]
         )
         out = self._weight_embeddings(embedding_batch, self.context_embedding_weights)
